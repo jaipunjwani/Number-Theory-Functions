@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 
 public class NumberTheoryFunctions {
 
@@ -98,4 +99,84 @@ public class NumberTheoryFunctions {
 		
 		
 	}
+	
+	public int bruteForce() {
+	
+		BigInteger left = BigInteger.valueOf(102).pow(70).add(BigInteger.valueOf(1));
+		
+		for (int i = 0; i<113; i++) {
+			
+			BigInteger base = BigInteger.valueOf(i);
+			BigInteger result = base.pow(37).mod(BigInteger.valueOf(113));
+			
+			if (left.mod(BigInteger.valueOf(113)).equals(result)) {
+				return i;
+			}
+			
+		}
+		return -1;
+		
+	}
+	
+	/**
+	 * Converts an integer to binary (represented as a String)
+	 * CAVEAT - returns string in standard binary format causing 0th character to be highest binary power
+	 * @param dec a standard integer in decimal representation
+	 * @return the integer converted to binary as a string in standard representation
+	 */
+	public String decimalToBinary(int dec) {
+		// use division algorithm to repeatedly divide by 2 and get each binary digit 
+		String binaryStr = "";
+		int dividend, quotient, remainder;
+		remainder = quotient = -1;
+		dividend = dec;
+		
+		
+		while (quotient != 0) {
+			quotient = dividend/2;
+			remainder = dividend % 2;
+			binaryStr =  remainder + binaryStr;
+			dividend = quotient;
+		}
+		
+		return binaryStr;
+	}
+	
+	/**
+	 * Computes a^m mod n
+	 * @param a base
+	 * @param m exponent
+	 * @param n modulus
+	 * @return a^m (mod n) 
+	 */
+	public int computeModuloPower(int a, int m, int n) {
+		
+		// step 1 - convert exponent to binary
+		String binaryStr = decimalToBinary(m);
+		
+		// step 2 - compute powers using binary representation of exponent
+		// for efficiency we use square previous powers of 2 to compute subsequent powers 
+		
+		int[] powersOf2 = new int[binaryStr.length()];
+		powersOf2[0] = Math.floorMod(a, n);
+		for(int i = 1; i < binaryStr.length(); i++) {
+			// squares previous binary power of a 
+			powersOf2[i] = Math.floorMod((int)Math.pow(powersOf2[i-1], 2), n);
+		}
+		
+		// step 3 - multiply the powers together
+		// traverse through binary string and corresponding representation of each power in array
+		int result = 1;
+		for (int i = binaryStr.length()-1, j = 0; i>=0 && j<binaryStr.length(); i--, j++) {
+			int bit = Character.getNumericValue(binaryStr.charAt(i));
+			if (bit == 1) {
+				result *= powersOf2[j];
+			}
+		}
+		
+		return Math.floorMod(result, n);
+		
+	}
+		
+	
 }

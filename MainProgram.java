@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 
 public class MainProgram {
 	
@@ -6,8 +7,9 @@ public class MainProgram {
 	public static void main(String[] args) {
 		
 		
-		euclidExtended(42,5);
+		//euclidExtended(42,5);
 		
+		System.out.println(func.computeModuloPower(7, 11, 100));
 	}
 	
 	public static void euclidExtended(int a, int b) {
